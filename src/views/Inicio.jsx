@@ -1,4 +1,4 @@
-import Contador from "../components/Contador";
+import React from 'react';
 
 
 const Inicio = () => {
@@ -6,7 +6,7 @@ const Inicio = () => {
   return (
 
     <>
-    <Contador />
+    <h2>Bienvenido a la página de inicio</h2>
     </>
 
   );
