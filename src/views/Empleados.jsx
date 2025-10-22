@@ -1,6 +1,38 @@
-
+import { useState,useEffect } from "react";
+import { Container } from "react-bootstrap";
+import TablaEmpleados from "../components/empleados/TablaEmlpeados";
 
 const Empleados = () => {
-return <h2>Página de Empleados</h2>;
+  const [empleados, setEmpleados] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const obtenerEmpleados = async () => {
+    try {
+      const respuesta = await fetch("http://localhost:3000/API/empleados");
+      if (!respuesta.ok) {
+        throw new Error("Error al obtener los empleados");
+      }
+      const datos = await respuesta.json();
+      setEmpleados(datos);
+      setCargando(false);
+    } catch (error) {
+      console.long(error.message);
+      setCargando(false);
+    }
+  }
+
+  useEffect(() => {
+    obtenerEmpleados();
+  }, []);
+  return (
+    <>
+    <Container className="mt-4">
+        <h4>Empleados</h4>
+        <TablaEmpleados 
+        empleados={empleados} 
+        cargando={cargando}
+        />
+    </Container>
+    </>
+  );
 } 
 export default Empleados;
