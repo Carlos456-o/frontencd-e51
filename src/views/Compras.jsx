@@ -1,10 +1,15 @@
 import {useState, useEffect} from "react";
-import { Container } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import TablaCompras from "../components/compras/TablaCompras";
+import CuadroBusquedas from "../components/busquedas/CuadroBusquedas";
 
 const Compras = () => {
   const [compras, setCompras] = useState([]);
   const [cargando, setCargando] = useState(true);
+
+  const [comprasFiltradas, setcomprasFiltradas] = useState([]);
+  const [textoBusqueda, setTextoBusqueda] = useState("");
+
   const obtenerCompras = async () => {
     try {
       const respuesta = await fetch("http://localhost:3000/API/compras");
@@ -13,12 +18,27 @@ const Compras = () => {
       }
       const datos = await respuesta.json();
       setCompras(datos);
+      setcomprasFiltradas(datos);
       setCargando(false);
     } catch (error) {
       console.long(error.message);
       setCargando(false);
     }
   }
+
+    const manejarCambioBusqueda = (e) => {
+    const texto = e.target.value.toLowerCase();
+    setTextoBusqueda(texto);
+
+    const filtradas = compras.filter(
+      (compra) =>
+        compra.id_emplado == texto ||
+        compra.fecha_compra.toLowerCase().includes(texto) ||
+        compra.total_compra == texto
+    );
+    setcomprasFiltradas(filtradas);
+  };
+
   useEffect(() => {
     obtenerCompras();
   }, []);
@@ -26,8 +46,18 @@ const Compras = () => {
     <>
     <Container className="mt-4">
         <h4>Compras</h4>
+
+        <Row>
+          <Col lg={5} md={8} sm={8} xs={7}>
+            <CuadroBusquedas
+              textoBusqueda={textoBusqueda}
+              manejarCambioBusqueda={manejarCambioBusqueda}
+            />
+          </Col>
+        </Row>
+
         <TablaCompras 
-        compras={compras} 
+        compras={comprasFiltradas} 
         cargando={cargando}
         />
     </Container>

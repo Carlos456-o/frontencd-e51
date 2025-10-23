@@ -23,7 +23,7 @@ const Tablaclientes = ({ clientes, cargando }) => {
             <th>Apellido 1</th>
             <th>Apellido 2</th>
             <th>Celular</th>
-            <th>Dirrecion</th>
+            <th>Direccion</th>
             <th>Cedula</th>
             <th>Acciones</th>
           </tr>
@@ -38,7 +38,7 @@ const Tablaclientes = ({ clientes, cargando }) => {
                   <td>{cliente.primer_apellido}</td>
                   <td>{cliente.segundo_apellido}</td>
                   <td>{cliente.celular}</td>
-                  <td>{cliente.dirrecion}</td>
+                  <td>{cliente.direccion}</td>
                   <td>{cliente.cedula}</td>
                   <td>Acción</td>
                 </tr>

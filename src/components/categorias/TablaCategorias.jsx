@@ -1,5 +1,6 @@
 import { Table, Spinner } from "react-bootstrap";
 
+
 const TablaCategorias = ({ categorias, cargando }) => {
 
   if (cargando) {
