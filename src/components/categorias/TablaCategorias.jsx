@@ -15,7 +15,7 @@ const TablaCategorias = ({ categorias, cargando }) => {
 
   return (
     <>
-      <Table striped bordered hover>
+      <Table variant="success" striped bordered hover>
         <thead>
           <tr>
             <th>ID</th>

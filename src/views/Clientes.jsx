@@ -47,10 +47,10 @@ const Clientes = () => {
   useEffect(() => {
     obtenerClientes();
   }, []);
-  
+
   return (
     <>
-    <Container className="mt-4">
+      <Container className="mt-4">
         <h4>Clientes</h4>
 
         <Row>
@@ -62,11 +62,11 @@ const Clientes = () => {
           </Col>
         </Row>
 
-        <Tablaclientes 
-        clientes={clientesFiltrados} 
-        cargando={cargando}
+        <Tablaclientes
+          clientes={clientesFiltrados}
+          cargando={cargando}
         />
-    </Container>
+      </Container>
     </>
   );
 
