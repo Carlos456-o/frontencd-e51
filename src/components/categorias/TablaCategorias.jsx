@@ -1,7 +1,34 @@
 import { Table, Spinner } from "react-bootstrap";
+import BotonOrden from "../ordenamiento/BotonOrden";
+import React, { useState } from "react";
+
 
 
 const TablaCategorias = ({ categorias, cargando }) => {
+
+  const [orden, setOrden] = useState({ campo: "id_categoria", direccion: "asc" });
+
+  const manejarOrden = (campo) => {
+    setOrden((prev) => ({
+      campo,
+      direccion:
+        prev.campo === campo && prev.direccion === "asc" ? "desc" : "asc",
+    }));
+  };
+
+  const categoriasOrdenadas = [...categorias].sort((a, b) => {
+    const valorA = a[orden.campo];
+    const valorB = b[orden.campo];
+
+    if (typeof valorA === "number" && typeof valorB === "number") {
+      return orden.direccion === "asc" ? valorA - valorB : valorB - valorA;
+    }
+
+    const comparacion = String(valorA).localeCompare(String(valorB));
+    return orden.direccion === "asc" ? comparacion : -comparacion;
+  });
+
+
 
   if (cargando) {
     return (
@@ -13,26 +40,34 @@ const TablaCategorias = ({ categorias, cargando }) => {
     );
   }
 
-  return (
+  return (  
     <>
       <Table variant="success" striped bordered hover>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Nombre Categoria</th>
-            <th>Descripcion Categorias</th>
-            <th>Acciones</th>
+            <BotonOrden campo="id_categoria" orden={orden} manejarOrden={manejarOrden}>
+              ID
+            </BotonOrden>
+
+            <BotonOrden campo="nombre_categoria" orden={orden} manejarOrden={manejarOrden}>
+              Nombre Categoría
+            </BotonOrden>
+
+            <BotonOrden campo="descripcion_categoria" orden={orden} manejarOrden={manejarOrden}>
+              Descripción Categoría
+            </BotonOrden>
+
           </tr>
         </thead>
         <tbody>
-          {categorias.map((categoria) => {
+          {categoriasOrdenadas.map((categoria) => {
             return (
-                <tr key={categoria.id_categoria}>
-                  <td>{categoria.id_categoria}</td>
-                  <td>{categoria.nombre_categoria}</td>
-                  <td>{categoria.descripcion_categoria}</td>
-                  <td>Acción</td>
-                </tr>
+              <tr key={categoria.id_categoria}>
+                <td>{categoria.id_categoria}</td>
+                <td>{categoria.nombre_categoria}</td>
+                <td>{categoria.descripcion_categoria}</td>
+                <td>Acción</td>
+              </tr>
             );
           })}
         </tbody>

@@ -5,6 +5,7 @@ import CuadroBusquedas from "../components/busquedas/CuadroBusquedas";
 import ModalRegistroCategoria from "../components/categorias/ModalRegistroCategoria";
 
 const categorias = () => {
+
   const [categorias, setCategorias] = useState([]);
   const [cargando, setCargando] = useState(true);
 
@@ -16,6 +17,8 @@ const categorias = () => {
     nombre_categoria: '',
     descripcion_categoria: ''
   });
+
+  
 
   const manejarCambioInput = (e) => {
     const { name, value } = e.target;
