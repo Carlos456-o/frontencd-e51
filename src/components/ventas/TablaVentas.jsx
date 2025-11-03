@@ -1,6 +1,30 @@
 import { Table, Spinner } from "react-bootstrap";
+import { useState } from "react";
+import BotonOrden from "../ordenamiento/BotonOrden";
 
 const TablaVentas = ({ ventas, cargando }) => {
+
+  const [orden, setOrden] = useState({ campo: "id_venta", direccion: "asc" });
+    
+      const manejarOrden = (campo) => {
+        setOrden((prev) => ({
+          campo,
+          direccion:
+            prev.campo === campo && prev.direccion === "asc" ? "desc" : "asc",
+        }));
+      };
+    
+      const VentasOrdenadas = [...ventas].sort((a, b) => {
+        const valorA = a[orden.campo];
+        const valorB = b[orden.campo];
+    
+        if (typeof valorA === "number" && typeof valorB === "number") {
+          return orden.direccion === "asc" ? valorA - valorB : valorB - valorA;
+        }
+    
+        const comparacion = String(valorA).localeCompare(String(valorB));
+        return orden.direccion === "asc" ? comparacion : -comparacion;
+      });
 
   if (cargando) {
     return (
@@ -17,16 +41,29 @@ const TablaVentas = ({ ventas, cargando }) => {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>ID Cliente</th>
-            <th>ID Empleado</th>
-            <th>Fecha Venta</th>
-            <th>Total Venta</th>
-            <th>Acciones</th>
+            <BotonOrden campo="id_venta" orden={orden} manejarOrden={manejarOrden}>
+              ID
+            </BotonOrden>
+
+            <BotonOrden campo="id_cliente" orden={orden} manejarOrden={manejarOrden}>
+              ID cliente
+            </BotonOrden>
+
+            <BotonOrden campo="id_empleado" orden={orden} manejarOrden={manejarOrden}>
+              ID empleado
+            </BotonOrden>
+
+            <BotonOrden campo="fecha_venta" orden={orden} manejarOrden={manejarOrden}>
+              Fecha venta
+            </BotonOrden>
+
+            <BotonOrden campo="total_venta" orden={orden} manejarOrden={manejarOrden}>
+              Total
+            </BotonOrden>
           </tr>
         </thead>
         <tbody>
-          {ventas.map((venta) => {
+          {VentasOrdenadas.map((venta) => {
             return (
                 <tr key={venta.id_venta}>
                   <td>{venta.id_venta}</td>

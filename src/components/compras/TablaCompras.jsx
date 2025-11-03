@@ -1,6 +1,30 @@
 import { Table, Spinner } from "react-bootstrap";
+import { useState } from "react";
+import BotonOrden from "../ordenamiento/BotonOrden";
 
 const TablaCompras = ({ compras, cargando }) => {
+
+  const [orden, setOrden] = useState({ campo: "id_compra", direccion: "asc" });
+  
+    const manejarOrden = (campo) => {
+      setOrden((prev) => ({
+        campo,
+        direccion:
+          prev.campo === campo && prev.direccion === "asc" ? "desc" : "asc",
+      }));
+    };
+  
+    const ComprasOrdenadas = [...compras].sort((a, b) => {
+      const valorA = a[orden.campo];
+      const valorB = b[orden.campo];
+  
+      if (typeof valorA === "number" && typeof valorB === "number") {
+        return orden.direccion === "asc" ? valorA - valorB : valorB - valorA;
+      }
+  
+      const comparacion = String(valorA).localeCompare(String(valorB));
+      return orden.direccion === "asc" ? comparacion : -comparacion;
+    });
 
   if (cargando) {
     return (
@@ -17,15 +41,25 @@ const TablaCompras = ({ compras, cargando }) => {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>ID Empleado</th>
-            <th>Fecha</th>
-            <th>Total</th>
-            <th>Acciones</th>
+            <BotonOrden campo="id_compra" orden={orden} manejarOrden={manejarOrden}>
+              ID
+            </BotonOrden>
+
+            <BotonOrden campo="id_empleado" orden={orden} manejarOrden={manejarOrden}>
+              ID empleado
+            </BotonOrden>
+
+            <BotonOrden campo="fecha_compra" orden={orden} manejarOrden={manejarOrden}>
+              Fecha de la compra
+            </BotonOrden>
+
+            <BotonOrden campo="total_compra" orden={orden} manejarOrden={manejarOrden}>
+              Total
+            </BotonOrden>
           </tr>
         </thead>
         <tbody>
-          {compras.map((compra) => {
+          {ComprasOrdenadas.map((compra) => {
             return (
                 <tr key={compra.id_compra}>
                   <td>{compra.id_compra}</td>
