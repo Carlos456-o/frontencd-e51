@@ -5,6 +5,9 @@ import CuadroBusquedas from "../components/busquedas/CuadroBusquedas";
 
 
 const Empleados = () => {
+
+
+
   const [empleados, setEmpleados] = useState([]);
   const [cargando, setCargando] = useState(true);
 
@@ -53,6 +56,8 @@ const Empleados = () => {
     <>
     <Container className="mt-4">
         <h4>Empleados</h4> 
+
+        
 
             <CuadroBusquedas
               textoBusqueda={textoBusqueda}

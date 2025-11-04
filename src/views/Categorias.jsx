@@ -3,8 +3,17 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import TablaCategorias from "../components/categorias/TablaCategorias";
 import CuadroBusquedas from "../components/busquedas/CuadroBusquedas";
 import ModalRegistroCategoria from "../components/categorias/ModalRegistroCategoria";
+import ModalEdicionCategoria from "../components/categorias/ModalEdicionCategoria";
+import ModalEliminacionCategoria from "../components/categorias/ModalEliminacionCategoria";
 
 const categorias = () => {
+
+  const [mostrarModalEdicion, setMostrarModalEdicion] = useState(false);
+  const [mostrarModalEliminar, setMostrarModalEliminar] = useState(false);
+
+  const [categoriaEditada, setCategoriaEditada] = useState(null);
+  const [categoriaAEliminar, setCategoriaAEliminar] = useState(null);
+
 
   const [categorias, setCategorias] = useState([]);
   const [cargando, setCargando] = useState(true);
@@ -18,7 +27,47 @@ const categorias = () => {
     descripcion_categoria: ''
   });
 
-  
+  const abrirModalEdicion = (categoria) => {
+    setCategoriaEditada({ ...categoria });
+    setMostrarModalEdicion(true);
+  };
+
+  const guardarEdicion = async () => {
+    if (!categoriaEditada.nombre_categoria.trim()) return;
+    try {
+      const respuesta = await fetch(`http://localhost:3000/api/actualizarcategoria/${categoriaEditada.id_categoria}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(categoriaEditada)
+      });
+      if (!respuesta.ok) throw new Error('Error al actualizar');
+      setMostrarModalEdicion(false);
+      await obtenerCategorias();
+    } catch (error) {
+      console.error("Error al editar categoría:", error);
+      alert("No se pudo actualizar la categoría.");
+    }
+  };
+
+  const abrirModalEliminacion = (categoria) => {
+    setCategoriaAEliminar(categoria);
+    setMostrarModalEliminar(true);
+  };
+
+  const confirmarEliminacion = async () => {
+    try {
+      const respuesta = await fetch(`http://localhost:3000/api/eliminarcategoria/${categoriaAEliminar.id_categoria}`, {
+        method: 'DELETE',
+      });
+      if (!respuesta.ok) throw new Error('Error al eliminar');
+      setMostrarModalEliminar(false);
+      setCategoriaAEliminar(null);
+      await obtenerCategorias();
+    } catch (error) {
+      console.error("Error al eliminar categoría:", error);
+      alert("No se pudo eliminar la categoría.");
+    }
+  };
 
   const manejarCambioInput = (e) => {
     const { name, value } = e.target;
@@ -83,7 +132,9 @@ const categorias = () => {
   return (
     <>
       <Container className="mt-4">
-        <h4>Categorias</h4>
+        
+
+
         <Row>
 
           <Col lg={5} md={8} sm={8} xs={7}>
@@ -93,20 +144,22 @@ const categorias = () => {
             />
           </Col>
 
-        <Col className="text-end">
-          <Button
-            variant="success"
-            onClick={() => setMostrarModal(true)}
-          >
-            + Nueva Categoría
-          </Button>
-        </Col>
+          <Col className="text-end">
+            <Button
+              variant="success"
+              onClick={() => setMostrarModal(true)}
+            >
+              + Nueva Categoría
+            </Button>
+          </Col>
 
         </Row>
 
         <TablaCategorias
           categorias={categoriasFiltradas}
           cargando={cargando}
+          abrirModalEdicion={abrirModalEdicion}
+          abrirModalEliminacion={abrirModalEliminacion}
         />
         <ModalRegistroCategoria
           mostrarModal={mostrarModal}
@@ -116,13 +169,27 @@ const categorias = () => {
           agregarCategoria={agregarCategoria}
         />
 
+        <ModalEdicionCategoria
+          mostrar={mostrarModalEdicion}
+          setMostrar={setMostrarModalEdicion}
+          categoriaEditada={categoriaEditada}
+          setCategoriaEditada={setCategoriaEditada}
+          guardarEdicion={guardarEdicion}
+        />
+
+        <ModalEliminacionCategoria
+          mostrar={mostrarModalEliminar}
+          setMostrar={setMostrarModalEliminar}
+          categoria={categoriaAEliminar}
+          confirmarEliminacion={confirmarEliminacion}
+        />
+
       </Container>
     </>
 
   );
 
 }
-
 
 export default categorias;
 

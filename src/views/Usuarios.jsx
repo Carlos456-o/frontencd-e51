@@ -3,8 +3,18 @@ import TablaUsuarios from "../components/usuarios/TablaUsuarios";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import CuadroBusquedas from "../components/busquedas/CuadroBusquedas";
 import ModalRegistroUsuarios from "../components/usuarios/ModalRegistroUsuarios";
+import ModalEdicionUsuario from "../components/usuarios/ModalEdicionUsuario";
+import ModalEliminarUsuario from "../components/usuarios/ModalEliminarUsuario";
 
 const Usuarios = () => {
+
+  const [mostrarModalEdicion, setMostrarModalEdicion] = useState(false);
+  const [mostrarModalEliminar, setMostrarModalEliminar] = useState(false);
+
+  const [usuarioEditado, setUsuarioEditado] = useState(null);
+  const [usuarioEliminar, setUsuarioEliminar] = useState(null);
+
+
   const [usuarios, setUsuarios] = useState([]);
   const [cargando, setCargando] = useState(true);
 
@@ -17,10 +27,56 @@ const Usuarios = () => {
     contraseña: ''
   });
 
+  const abrirModalEdicion = (usuario) => {
+    setUsuarioEditado({ ...usuario });
+    setMostrarModalEdicion(true);
+  };
+
+  const guardarEdicion = async () => {
+    if (!usuarioEditado.usuario.trim()) return;
+    try {
+      const respuesta = await fetch(`http://localhost:3000/api/actualizarusuario/${usuarioEditado.id_usuario}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(usuarioEditado)
+      });
+      if (!respuesta.ok) throw new Error('Error al actualizar');
+      setMostrarModalEdicion(false);
+      await obtenerUsuarios();
+    } catch (error) {
+      console.error("Error al editar el usuario:", error);
+      alert("No se pudo actualizar el usuario.");
+    }
+  };
+
+  const abrirModalEliminacion = (usuario) => {
+    setUsuarioEliminar(usuario);
+    setMostrarModalEliminar(true);
+  };
+
+  const confirmarEliminacion = async () => {
+    try {
+      const respuesta = await fetch(`http://localhost:3000/api/eliminarusuario/${usuarioEliminar.id_usuario}`, {
+        method: 'DELETE',
+      });
+      if (!respuesta.ok) throw new Error('Error al eliminar');
+      setMostrarModalEliminar(false);
+      setUsuarioEliminar(null);
+      await obtenerUsuarios();
+    } catch (error) {
+      console.error("Error al eliminar el usuario:", error);
+      alert("No se pudo eliminar el usuario.");
+    }
+  };
+
+
+
   const manejarCambioInput = (e) => {
     const { name, value } = e.target;
     setNuevoUsuario(prev => ({ ...prev, [name]: value }));
   };
+
+
 
   const agregarUsuario = async () => {
     if (!nuevoUsuario.usuario.trim()) return;
@@ -101,6 +157,8 @@ const Usuarios = () => {
         <TablaUsuarios
           usuarios={usuariosFiltrados}
           cargando={cargando}
+          abrirModalEdicion={abrirModalEdicion}
+          abrirModalEliminacion={abrirModalEliminacion}
         />
 
         <ModalRegistroUsuarios
@@ -110,6 +168,22 @@ const Usuarios = () => {
           manejarCambioInput={manejarCambioInput}
           agregarUsuario={agregarUsuario}
         />
+
+        <ModalEdicionUsuario
+          mostrar={mostrarModalEdicion}
+          setMostrar={setMostrarModalEdicion}
+          usuarioEditado={usuarioEditado}
+          setUsuarioEditado={setUsuarioEditado}
+          guardarEdicion={guardarEdicion}
+        />
+
+        <ModalEliminarUsuario
+          mostrar={mostrarModalEliminar}
+          setMostrar={setMostrarModalEliminar}
+          usuario={usuarioEliminar}
+          confirmarEliminacion={confirmarEliminacion}
+        />
+
       </Container>
     </>
   );

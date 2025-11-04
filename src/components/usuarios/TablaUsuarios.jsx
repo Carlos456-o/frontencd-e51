@@ -1,8 +1,8 @@
-import { Table, Spinner } from "react-bootstrap";
+import { Table, Spinner, Button} from "react-bootstrap";
 import { useState } from "react";
 import BotonOrden from "../ordenamiento/BotonOrden";
 
-const TablaUsuarios = ({ usuarios, cargando }) => {
+const TablaUsuarios = ({ usuarios, cargando, abrirModalEdicion, abrirModalEliminacion }) => {
 
   const [orden, setOrden] = useState({ campo: "id_usuario", direccion: "asc" });
 
@@ -53,6 +53,10 @@ const TablaUsuarios = ({ usuarios, cargando }) => {
               Contraseña
             </BotonOrden>
 
+            <BotonOrden campo="" orden={orden} manejarOrden={manejarOrden}>
+              Acciones
+            </BotonOrden>
+
           </tr>
         </thead>
         <tbody>
@@ -62,7 +66,26 @@ const TablaUsuarios = ({ usuarios, cargando }) => {
                 <td>{usuario.id_usuario}</td>
                 <td>{usuario.usuario}</td>
                 <td>{usuario.contraseña}</td>
-                <td>Acción</td>
+                <td>
+                  <Button
+                    variant="outline-warning"
+                    size="sm"
+                    className="me-2"
+                    onClick={() => abrirModalEdicion(usuario)}
+                  >
+                    <i className="bi bi-pencil"></i>
+                  </Button>
+
+                  <Button
+                    variant="outline-danger"
+                    size="sm"
+                    onClick={() => abrirModalEliminacion(usuario)}
+                  >
+                    <i className="bi bi-trash"></i>
+                  </Button>
+
+
+                </td>
               </tr>
             );
           })}
