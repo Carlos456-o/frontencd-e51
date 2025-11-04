@@ -82,7 +82,7 @@ const ModalRegistroCategoria = ({
           <Form.Group className="mb-3" controlId="cargo">
             <Form.Label>cargo</Form.Label>
             <Form.Control
-              type="text"
+              type="select"
               name="cargo"
               value={nuevaEmpleado.cargo}
               onChange={manejarCambioInput}
@@ -95,8 +95,8 @@ const ModalRegistroCategoria = ({
           <Form.Group className="mb-3" controlId="fecha_contratacion">
             <Form.Label>Fecha contratacion</Form.Label>
             <Form.Control
-              type="text"
-              name="cargo"
+              type="DATE"
+              name="fecha_contratacion"
               value={nuevaEmpleado.fecha_contratacion}
               onChange={manejarCambioInput}
               placeholder="Ej: 10/08/2023"
