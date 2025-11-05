@@ -1,8 +1,10 @@
 import { Table, Spinner } from "react-bootstrap";
 import { useState } from "react";
 import BotonOrden from "../ordenamiento/BotonOrden";
+import Paginacion from "../ordenamiento/Paginacion";
 
-const TablaEmpleados = ({ empleados, cargando }) => {
+
+const TablaEmpleados = ({ empleados, cargando,totalElementos,elementosPorPagina,paginaActual,establecerPaginaActual}) => {
 
   const [orden, setOrden] = useState({ campo: "id_empleado", direccion: "asc" });
 
@@ -95,6 +97,14 @@ const TablaEmpleados = ({ empleados, cargando }) => {
           })}
         </tbody>
       </Table>
+
+      <Paginacion
+        elementosPorPagina={elementosPorPagina}
+        totalElementos={totalElementos}
+        paginaActual={paginaActual}
+        establecerPaginaActual={establecerPaginaActual}
+      />
+
     </>
   );
 }

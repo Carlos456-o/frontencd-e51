@@ -1,8 +1,9 @@
 import { Table, Spinner } from "react-bootstrap";
 import { useState } from "react";
 import BotonOrden from "../ordenamiento/BotonOrden";
+import Paginacion from "../ordenamiento/Paginacion";
 
-const TablaProductos = ({ productos, cargando }) => {
+const TablaProductos = ({ productos, cargando,totalElementos,elementosPorPagina,paginaActual,establecerPaginaActual}) => {
 
   const [orden, setOrden] = useState({ campo: "id_producto", direccion: "asc" });
   
@@ -87,6 +88,14 @@ const TablaProductos = ({ productos, cargando }) => {
           })}
         </tbody>
       </Table>
+
+      <Paginacion
+        elementosPorPagina={elementosPorPagina}
+        totalElementos={totalElementos}
+        paginaActual={paginaActual}
+        establecerPaginaActual={establecerPaginaActual}
+      />
+
     </>
   );
 }

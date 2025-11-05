@@ -10,6 +10,17 @@ const Compras = () => {
   const [comprasFiltradas, setcomprasFiltradas] = useState([]);
   const [textoBusqueda, setTextoBusqueda] = useState("");
 
+  const [paginaActual, establecerPaginaActual] = useState(1);
+  const elementosPorPagina = 5; // Número de productos por página
+
+  // Calcular productos paginados
+  const comprasPaginadas = comprasFiltradas.slice(
+    (paginaActual - 1) * elementosPorPagina,
+    paginaActual * elementosPorPagina
+  );
+
+
+
   const obtenerCompras = async () => {
     try {
       const respuesta = await fetch("http://localhost:3000/API/compras");
@@ -57,9 +68,14 @@ const Compras = () => {
         </Row>
 
         <TablaCompras 
-        compras={comprasFiltradas} 
+        compras={comprasPaginadas} 
         cargando={cargando}
+          totalElementos={compras.length} // Total de categorias
+          elementosPorPagina={elementosPorPagina} // Elementos por página
+          paginaActual={paginaActual} // Página actual
+          establecerPaginaActual={establecerPaginaActual} // Método para cambiar página
         />
+
     </Container>
     </>
   );

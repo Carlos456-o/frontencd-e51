@@ -8,6 +8,15 @@ const Ventas = () => {
   const [ventasFiltradas, setventasFiltradas] = useState([]);
   const [textoBusqueda, setTextoBusqueda] = useState("");
 
+  const [paginaActual, establecerPaginaActual] = useState(1);
+  const elementosPorPagina = 5; // Número de productos por página
+
+  // Calcular productos paginados
+  const ventasPaginadas = ventasFiltradas.slice(
+    (paginaActual - 1) * elementosPorPagina,
+    paginaActual * elementosPorPagina
+  );
+
 
   const [ventas, setVentas] = useState([]);
   const [cargando, setCargando] = useState(true);
@@ -56,11 +65,13 @@ const Ventas = () => {
               manejarCambioBusqueda={manejarCambioBusqueda}
             />
 
-
-
         <TablaVentas 
-        ventas={ventasFiltradas} 
+        ventas={ventasPaginadas} 
         cargando={cargando}
+          totalElementos={ventas.length} // Total de categorias
+          elementosPorPagina={elementosPorPagina} // Elementos por página
+          paginaActual={paginaActual} // Página actual
+          establecerPaginaActual={establecerPaginaActual} // Método para cambiar página
         />
     </Container>
     </>

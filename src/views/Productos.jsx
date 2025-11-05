@@ -10,6 +10,17 @@ const Productos = () => {
   const [productosFiltrados, setproductosFiltrados] = useState([]);
   const [textoBusqueda, setTextoBusqueda] = useState("");
 
+  const [paginaActual, establecerPaginaActual] = useState(1);
+  const elementosPorPagina = 5; // Número de productos por página
+
+  // Calcular productos paginados
+  const productosPaginados = productosFiltrados.slice(
+    (paginaActual - 1) * elementosPorPagina,
+    paginaActual * elementosPorPagina
+  );
+
+
+
   const obtenerProductos = async () => {
     try {
       const respuesta = await fetch("http://localhost:3000/API/productos");
@@ -60,8 +71,13 @@ const Productos = () => {
         </Row>
 
         <TablaProductos 
-        productos={productosFiltrados} 
+        productos={productosPaginados} 
         cargando={cargando}
+          totalElementos={productos.length} // Total de categorias
+          elementosPorPagina={elementosPorPagina} // Elementos por página
+          paginaActual={paginaActual} // Página actual
+          establecerPaginaActual={establecerPaginaActual} // Método para cambiar página
+
         />
     </Container>
     </>

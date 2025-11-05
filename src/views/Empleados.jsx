@@ -13,6 +13,9 @@ const Empleados = () => {
   const [empleadosFiltrados, setempleadosFiltrados] = useState([]);
   const [textoBusqueda, setTextoBusqueda] = useState("");
 
+  const [paginaActual, establecerPaginaActual] = useState(1);
+  const elementosPorPagina = 5; // Número de productos por página
+
   const [mostrarModal, setMostrarModal] = useState(false);
   const [nuevoEmpleado, setNuevoEmpleado] = useState({
     primer_nombre: '',
@@ -23,6 +26,13 @@ const Empleados = () => {
     cargo: '',
     fecha_contratacion: ''
   });
+
+  // Calcular productos paginados
+  const empleadosPaginados = empleadosFiltrados.slice(
+    (paginaActual - 1) * elementosPorPagina,
+    paginaActual * elementosPorPagina
+  );
+
 
   const manejarCambioInput = (e) => {
     const { name, value } = e.target;
@@ -113,9 +123,13 @@ const Empleados = () => {
         </Col>
 
 
-        <TablaEmpleados 
-        empleados={empleadosFiltrados} 
-        cargando={cargando}
+        <TablaEmpleados
+          empleados={empleadosPaginados}
+          cargando={cargando}
+          totalElementos={empleados.length} // Total de categorias
+          elementosPorPagina={elementosPorPagina} // Elementos por página
+          paginaActual={paginaActual} // Página actual
+          establecerPaginaActual={establecerPaginaActual} // Método para cambiar página
         />
 
         <ModalRegistroEmpleados
@@ -125,7 +139,6 @@ const Empleados = () => {
           manejarCambioInput={manejarCambioInput}
           agregarEmpleado={agregarEmpleado}
         />
-
 
     </Container>
     </>

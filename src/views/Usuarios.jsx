@@ -14,6 +14,8 @@ const Usuarios = () => {
   const [usuarioEditado, setUsuarioEditado] = useState(null);
   const [usuarioEliminar, setUsuarioEliminar] = useState(null);
 
+  const [paginaActual, establecerPaginaActual] = useState(1);
+  const elementosPorPagina = 5; // Número de productos por página
 
   const [usuarios, setUsuarios] = useState([]);
   const [cargando, setCargando] = useState(true);
@@ -26,6 +28,13 @@ const Usuarios = () => {
     usuario: '',
     contraseña: ''
   });
+
+  // Calcular productos paginados
+  const usuariosPaginados = usuariosFiltrados.slice(
+    (paginaActual - 1) * elementosPorPagina,
+    paginaActual * elementosPorPagina
+  );
+
 
   const abrirModalEdicion = (usuario) => {
     setUsuarioEditado({ ...usuario });
@@ -155,10 +164,14 @@ const Usuarios = () => {
       <Container className="mt-4">
         <h4>Usuarios</h4>
         <TablaUsuarios
-          usuarios={usuariosFiltrados}
+          usuarios={usuariosPaginados}
           cargando={cargando}
           abrirModalEdicion={abrirModalEdicion}
           abrirModalEliminacion={abrirModalEliminacion}
+          totalElementos={usuarios.length} // Total de categorias
+          elementosPorPagina={elementosPorPagina} // Elementos por página
+          paginaActual={paginaActual} // Página actual
+          establecerPaginaActual={establecerPaginaActual} // Método para cambiar página
         />
 
         <ModalRegistroUsuarios

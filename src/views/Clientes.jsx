@@ -11,6 +11,16 @@ const Clientes = () => {
   const [clientesFiltrados, setclientesFiltrados] = useState([]);
   const [textoBusqueda, setTextoBusqueda] = useState("");
 
+  const [paginaActual, establecerPaginaActual] = useState(1);
+  const elementosPorPagina = 5; // Número de productos por página
+
+  // Calcular productos paginados
+  const clientesPaginados = clientesFiltrados.slice(
+    (paginaActual - 1) * elementosPorPagina,
+    paginaActual * elementosPorPagina
+  );
+
+
   const obtenerClientes = async () => {
     try {
       const respuesta = await fetch("http://localhost:3000/API/clientes");
@@ -63,8 +73,13 @@ const Clientes = () => {
         </Row>
 
         <Tablaclientes
-          clientes={clientesFiltrados}
+          clientes={clientesPaginados}
           cargando={cargando}
+          totalElementos={clientes.length} // Total de categorias
+          elementosPorPagina={elementosPorPagina} // Elementos por página
+          paginaActual={paginaActual} // Página actual
+          establecerPaginaActual={establecerPaginaActual} // Método para cambiar página
+
         />
       </Container>
     </>
