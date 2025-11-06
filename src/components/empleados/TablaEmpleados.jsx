@@ -3,8 +3,9 @@ import { Table, Spinner, Button } from "react-bootstrap";
 import BotonOrden from "../ordenamiento/BotonOrden";
 import Paginacion from "../ordenamiento/Paginacion";
 
-const TablaProductos = ({
-  productos,
+const TablaEmpleados = ({
+  empleados,
+  cargando,
   abrirModalEdicion,
   abrirModalEliminacion,
   totalElementos,
@@ -12,17 +13,16 @@ const TablaProductos = ({
   paginaActual,
   establecerPaginaActual
 }) => {
-  const [orden, setOrden] = useState({ campo: "id_producto", direccion: "asc" });
+  const [orden, setOrden] = useState({ campo: "id_empleado", direccion: "asc" });
 
   const manejarOrden = (campo) => {
     setOrden((prev) => ({
       campo,
-      direccion:
-        prev.campo === campo && prev.direccion === "asc" ? "desc" : "asc",
+      direccion: prev.campo === campo && prev.direccion === "asc" ? "desc" : "asc",
     }));
   };
 
-  const productosOrdenados = [...productos].sort((a, b) => {
+  const empleadosOrdenados = [...empleados].sort((a, b) => {
     const valorA = a[orden.campo] ?? "";
     const valorB = b[orden.campo] ?? "";
     if (typeof valorA === "number" && typeof valorB === "number") {
@@ -32,11 +32,12 @@ const TablaProductos = ({
     return orden.direccion === "asc" ? comparacion : -comparacion;
   });
 
-  if (!productos.length) {
+  if (cargando) {
     return (
       <div className="text-center my-4">
-        <Spinner animation="border" />
-        <p>Cargando productos...</p>
+        <Spinner animation="border">
+          <span className="visually-hidden">Cargando...</span>
+        </Spinner>
       </div>
     );
   }
@@ -46,61 +47,49 @@ const TablaProductos = ({
       <Table striped bordered hover className="mt-3">
         <thead>
           <tr>
-            <BotonOrden campo="id_producto" orden={orden} manejarOrden={manejarOrden}>
+            <BotonOrden campo="id_empleado" orden={orden} manejarOrden={manejarOrden}>
               ID
             </BotonOrden>
-            <BotonOrden campo="nombre_producto" orden={orden} manejarOrden={manejarOrden}>
-              Nombre
+            <BotonOrden campo="primer_nombre" orden={orden} manejarOrden={manejarOrden}>
+              Nombres
             </BotonOrden>
-            <BotonOrden campo="descripcion_producto" orden={orden} manejarOrden={manejarOrden}>
-              Descripción
+            <BotonOrden campo="primer_apellido" orden={orden} manejarOrden={manejarOrden}>
+              Apellidos
             </BotonOrden>
-            <BotonOrden campo="id_categoria" orden={orden} manejarOrden={manejarOrden}>
-              Categoría
+            <BotonOrden campo="celular" orden={orden} manejarOrden={manejarOrden}>
+              Celular
             </BotonOrden>
-            <BotonOrden campo="precio_unitario" orden={orden} manejarOrden={manejarOrden}>
-              Precio (C$)
+            <BotonOrden campo="cargo" orden={orden} manejarOrden={manejarOrden}>
+              Cargo
             </BotonOrden>
-            <BotonOrden campo="stock" orden={orden} manejarOrden={manejarOrden}>
-              Stock
+            <BotonOrden campo="fecha_contratacion" orden={orden} manejarOrden={manejarOrden}>
+              Fecha Contratación
             </BotonOrden>
-            <th>Imagen</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {productosOrdenados.map((prod) => (
-            <tr key={prod.id_producto}>
-              <td>{prod.id_producto}</td>
-              <td>{prod.nombre_producto}</td>
-              <td>{prod.descripcion_producto}</td>
-              <td>{prod.id_categoria}</td>
-              <td>{prod.precio_unitario?.toFixed(2)}</td>
-              <td>{prod.stock}</td>
-              <td>
-                {prod.imagen ? (
-                  <img
-                    src={prod.imagen}
-                    alt={prod.nombre_producto}
-                    style={{ width: "60px", height: "60px", objectFit: "cover" }}
-                  />
-                ) : (
-                  "Sin imagen"
-                )}
-              </td>
+          {empleadosOrdenados.map((emp) => (
+            <tr key={emp.id_empleado}>
+              <td>{emp.id_empleado}</td>
+              <td>{emp.primer_nombre} {emp.segundo_nombre || ''}</td>
+              <td>{emp.primer_apellido} {emp.segundo_apellido || ''}</td>
+              <td>{emp.celular || '-'}</td>
+              <td>{emp.cargo || '-'}</td>
+              <td>{new Date(emp.fecha_contratacion).toLocaleString('es-NI', { timeZone: 'America/Managua', dateStyle: 'short' })}</td>
               <td>
                 <Button
                   variant="outline-warning"
                   size="sm"
                   className="me-2"
-                  onClick={() => abrirModalEdicion(prod)}
+                  onClick={() => abrirModalEdicion(emp)}
                 >
                   <i className="bi bi-pencil"></i>
                 </Button>
                 <Button
                   variant="outline-danger"
                   size="sm"
-                  onClick={() => abrirModalEliminacion(prod)}
+                  onClick={() => abrirModalEliminacion(emp)}
                 >
                   <i className="bi bi-trash"></i>
                 </Button>
@@ -120,4 +109,4 @@ const TablaProductos = ({
   );
 };
 
-export default TablaProductos;
+export default TablaEmpleados;
