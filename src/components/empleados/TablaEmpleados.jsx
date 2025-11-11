@@ -3,16 +3,7 @@ import { Table, Spinner, Button } from "react-bootstrap";
 import BotonOrden from "../ordenamiento/BotonOrden";
 import Paginacion from "../ordenamiento/Paginacion";
 
-const TablaEmpleados = ({
-  empleados,
-  cargando,
-  abrirModalEdicion,
-  abrirModalEliminacion,
-  totalElementos,
-  elementosPorPagina,
-  paginaActual,
-  establecerPaginaActual
-}) => {
+const TablaEmpleados = ({empleados,cargando,abrirModalEdicion,abrirModalEliminacion,totalElementos,elementosPorPagina,paginaActual,establecerPaginaActual}) => {
   const [orden, setOrden] = useState({ campo: "id_empleado", direccion: "asc" });
 
   const manejarOrden = (campo) => {
