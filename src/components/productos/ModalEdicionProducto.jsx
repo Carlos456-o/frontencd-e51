@@ -102,7 +102,7 @@ const ModalEdicionProducto = ({
                 if (file) {
                   const reader = new FileReader();
                   reader.onloadend = () => {
-                    manejarCambioInputEdicion({
+                    manejarCambio({
                       target: { name: 'imagen', value: reader.result.split(',')[1] }
                     });
                   };

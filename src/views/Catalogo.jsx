@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row } from 'react-bootstrap';
 import Tarjeta from '../components/catalogo/Tarjeta';
 
-const CatalogoProductos = () => {
+const Catalogo = () => {
   const [listaProductos, setListaProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
 
@@ -47,4 +47,4 @@ const CatalogoProductos = () => {
   );
 };
 
-export default CatalogoProductos;
+export default Catalogo;
